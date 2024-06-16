@@ -10,7 +10,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET
 })
 
-const storage = new CloudinaryStorage({
+const attachmentStorage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: ["profile_pictures_mail_app", "attachments_mail_app"],
@@ -18,4 +18,4 @@ const storage = new CloudinaryStorage({
   },
 });
 
-export { cloudinary, storage };
+export { cloudinary, attachmentStorage };

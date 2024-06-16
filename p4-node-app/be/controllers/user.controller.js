@@ -1,10 +1,8 @@
 import { User, validateUser } from "../models/user.model.js";
-import { createToken } from "../middlewares/auth.js";
-import _ from "lodash";
+import { createToken } from "../middlewares/auth.middleware.js";
 import bcrypt from "bcrypt";
 
 const signUp = async (req, res) => {
-  try {
     const { first_name, last_name, email_address, password } = req.body;
     
     const isUserExist = await User.findOne({ email_address });
@@ -31,13 +29,9 @@ const signUp = async (req, res) => {
       message: "User is created successfully",
       data: user
     })
-  } catch(error) {
-    res.status(500).send(error.message);
-  }
 }
 
 const signIn = async (req, res) => {
-  try {
     const { email_address, password } = req.body;
     
     const user = await User.findOne({ email_address });
@@ -56,9 +50,6 @@ const signIn = async (req, res) => {
         })
       }
     }
-  } catch(error) {
-    res.status(500).send(error.message);
-  }
 }
 
 export { signUp, signIn };

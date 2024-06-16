@@ -6,12 +6,10 @@ Joi.objectId = JoiObjectId(Joi);
 
 const emailSchema = new Schema({
   email_id: {
-    type: Schema.Types.ObjectId,
-    required: true
+    type: Schema.Types.ObjectId
   },
   sender_id: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
+    type: String,
     required: true
   },
   contact: {
@@ -53,8 +51,8 @@ const Email = model("Email", emailSchema);
 
 function validateEmail(email) {
   const schema = Joi.object({
-    email_id: Joi.objectId().required(),
-    sender_id: Joi.objectId().required(),
+    email_id: Joi.objectId(),
+    sender_id: Joi.string().required(),
     contact: Joi.string().max(255).required(),
     subject: Joi.string().max(255).required(),
     body: Joi.string().min(1).max(255).required(),
@@ -68,7 +66,7 @@ function validateEmail(email) {
     updatedAt: Joi.date()
   });
 
-  return Joi.validate(email, schema)
+  return schema.validate(email)
 }
 
 export { Email, validateEmail };
