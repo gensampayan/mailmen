@@ -1,60 +1,105 @@
-import { ObjectId } from "bson";
 import { Email, validateEmail } from "../models/email.model.js";
 import { User } from "../models/user.model.js";
 import nodemailer from "nodemailer";
+import moment from "moment"
 
 const createEmail = async (req, res) => {
-    const { sender_id, contact, subject, body } = req.body;
-    const { path, filename } = req.file;
+  const { sender, contact, subject, body } = req.body;
+  const { path, filename } = req.file;
 
-    const { error } = validateEmail(req.body);
-    if (error) {
-      return res.status(400).send(error.details[0].message);
+  const { error } = validateEmail(req.body);
+  if (error) {
+    return res.status(400).send(error.details[0].message);
+  }
+
+  const senderUser = await User.findOne({ email_address: sender });
+  if (!senderUser) {
+    return res.status(404).send("Can't find sender");
+  }
+
+  const newEmail = new Email({
+    sender: senderUser.email_address, 
+    contact,
+    subject,
+    body,
+    attachment: { path, filename },
+    is_Read: false,
+    is_Draft: false
+  });
+
+  await newEmail.save();
+
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS
     }
+  });
 
-    const senderUser = await User.findOne({ email_address: sender_id });
-    if (!senderUser) {
-      return res.status(404).send("Can't find sender");
-    }
+  await transporter.sendMail({
+    from: sender,
+    to: contact,
+    subject,
+    text: body
+  });
 
-    const emailId = new ObjectId();
-    const newEmail = new Email({
-      email_id: emailId.toString(),
-      sender_id: senderUser._id, 
-      contact,
-      subject,
-      body,
-      attachment: { path, filename },
-      is_Read: false,
-      is_Draft: false
-    });
-
-    await newEmail.save();
-
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
-      }
-    });
-
-    const info = await transporter.sendMail({
-      from: sender_id,
-      to: contact,
-      subject,
-      text: body
-    });
-  
-    res.send(newEmail);
+  res.send(newEmail);
 };
 
+const getAllEmail = async (_, res) => {
+  const emails = await Email.find()
+    .select(["sender", "contact", "subject", "body", "createdAt"])
+    .sort({ createdAt: -1 })
+
+  if (!emails) {
+    res.status(404).send("Emails not found.");
+  }
+
+  const formattedEmails = emails.map(email => ({
+    sender: email.sender,
+    contact: email.contact,
+    subject: email.subject,
+    body: email.body,
+    createdAt: moment(email.createdAt).format('MMMM DD, YYYY, h:mm A')
+  }));
+
+  res.status(200).send({
+    message: "List of emails.",
+    data: formattedEmails
+  });
+}
+
+const getEmailById = async (req, res) => {
+  const { emailId } = req.params;
+
+  const email = await Email.findById({ _id: emailId })
+    .select(["sender", "contact", "subject", "body", "createdAt"])
+  
+  if (!email) {
+    res.status(404).send("Email not found.");
+  }
+
+  const formattedEmail = {
+    sender: email.sender,
+    contact: email.contact,
+    subject: email.subject,
+    body: email.body,
+    createdAt: moment(email.createdAt).format('MMMM DD, YYYY, h:mm A')
+  };
+
+  res.status(200).send({
+    message: "Email found.",
+    data: formattedEmail
+  });
+}
+
 const updateEmail = async (req, res) => {
-  const { id } = req.params;
+  const { emailId } = req.params;
   const { contact, subject, body, is_Draft } = req.body;
 
-  const email = await Email.findOne({ email_id: id });
+  const email = await Email.findOne({ _id: emailId }, { new: true });
   if (!email) {
     res.status(404).send("Email not found.");
   }
@@ -76,4 +121,18 @@ const updateEmail = async (req, res) => {
   }
 }
 
-export { createEmail, updateEmail };
+const deleteEmail = async (req, res) => {
+  const { emailId } = req.params;
+
+  const email = await Email.findByIdAndDelete({ _id: emailId });
+
+  if (!email) {
+    res.status(404).send("Email not found.");
+  }
+
+  res.status(204).send({
+    message: `Deleted email with ID ${email._id}`
+  });
+}
+
+export { createEmail, getAllEmail, getEmailById, updateEmail, deleteEmail };
