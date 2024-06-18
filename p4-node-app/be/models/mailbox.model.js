@@ -5,10 +5,6 @@ import JoiObjectId from "joi-objectid";
 Joi.objectId = JoiObjectId(Joi);
 
 const mailboxSchema = new Schema({
-  mailbox_id: {
-    type: Schema.Types.ObjectId,
-    required: true
-  },
   user_id: {
     type: Schema.Types.ObjectId,
     required: true
@@ -31,7 +27,6 @@ const Mailbox = model("Mailbox", mailboxSchema);
 
 function validateMailbox(mailbox) {
   const schema = Joi.object({
-    mailbox_id: Joi.objectId().required(),
     user_id: Joi.objectId().required(),
     name: Joi.string().max(50).required(),
     emails: Joi.array().items(Joi.string()),

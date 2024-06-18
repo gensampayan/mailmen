@@ -5,9 +5,6 @@ import JoiObjectId from "joi-objectid";
 Joi.objectId = JoiObjectId(Joi);
 
 const emailSchema = new Schema({
-  email_id: {
-    type: Schema.Types.ObjectId
-  },
   sender_id: {
     type: String,
     required: true
@@ -51,7 +48,6 @@ const Email = model("Email", emailSchema);
 
 function validateEmail(email) {
   const schema = Joi.object({
-    email_id: Joi.objectId(),
     sender_id: Joi.string().required(),
     contact: Joi.string().max(255).required(),
     subject: Joi.string().max(255).required(),

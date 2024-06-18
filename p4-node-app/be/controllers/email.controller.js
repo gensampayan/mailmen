@@ -9,13 +9,12 @@ const createEmail = async (req, res) => {
 
     const { error } = validateEmail(req.body);
     if (error) {
-      console.error("Validation error:", error.details[0].message);
       return res.status(400).send(error.details[0].message);
     }
 
     const senderUser = await User.findOne({ email_address: sender_id });
     if (!senderUser) {
-      return res.status(404).send("Can't find sender id");
+      return res.status(404).send("Can't find sender");
     }
 
     const emailId = new ObjectId();
@@ -30,12 +29,7 @@ const createEmail = async (req, res) => {
       is_Draft: false
     });
 
-    try {
-      await newEmail.save();
-    } catch (err) {
-      console.error("Error saving email:", err);
-      return res.status(500).send({ message: "Error saving email", error: err });
-    }
+    await newEmail.save();
 
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -46,20 +40,40 @@ const createEmail = async (req, res) => {
       }
     });
 
-    try {
-      const info = await transporter.sendMail({
-        from: sender_id,
-        to: contact,
-        subject,
-        text: body
-      });
-
-      console.log("Message sent: %s", info.messageId);
-      res.send(newEmail);
-    } catch (err) {
-      console.error("Error sending email:", err);
-      return res.status(500).send({ message: "Error sending email", error: err });
-    }
+    const info = await transporter.sendMail({
+      from: sender_id,
+      to: contact,
+      subject,
+      text: body
+    });
+  
+    res.send(newEmail);
 };
 
-export { createEmail };
+const updateEmail = async (req, res) => {
+  const { id } = req.params;
+  const { contact, subject, body, is_Draft } = req.body;
+
+  const email = await Email.findOne({ email_id: id });
+  if (!email) {
+    res.status(404).send("Email not found.");
+  }
+
+  if (is_Draft) {
+    if (contact !== undefined) email.contact = contact;
+    if (subject !== undefined) email.subject = subject;
+    if (body !== undefined) email.body = body;
+    if (is_Draft !== undefined) email.is_Draft = is_Draft;
+  
+    await email.save();
+  
+    res.status(200).send({
+        message: `Updated email with ID ${email._id}`,
+        data: email,
+    });
+  } else {
+    res.status(401).send("Something went wrong.")
+  }
+}
+
+export { createEmail, updateEmail };

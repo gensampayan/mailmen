@@ -5,10 +5,6 @@ import JoiObjectId from "joi-objectid";
 Joi.objectId = JoiObjectId(Joi);
 
 const recipientSchema = new Schema({
-  recipient_id: {
-    type: Schema.Types.ObjectId,
-    required: true
-  },
   email_id: {
     type: Schema.Types.ObjectId,
     ref: "Email",

@@ -5,9 +5,6 @@ import JoiObjectId from "joi-objectid";
 Joi.objectId = JoiObjectId(Joi);
 
 const userSchema = new Schema({
-  user_id: {
-    type: Schema.Types.ObjectId
-  },
   first_name: {
     type: String,
     maxlength: 50,
