@@ -7,11 +7,11 @@ import {
 } from "../controllers/email.controller.js";
 import { Router } from "express";
 import { asyncHandler } from "../middlewares/error.middleware.js";
-import multer from "multer";
 import { attachmentStorage} from "../config/storage.js";
+import multer from "multer";
 
 const emailRouter = Router();
-const emailStorage = multer({ attachmentStorage });
+const emailStorage = multer({ storage: attachmentStorage });
 
 emailRouter.post("/compose", emailStorage.single("email-image"), asyncHandler(createEmail));
 emailRouter.get("/", asyncHandler(getAllEmail));

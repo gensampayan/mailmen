@@ -34,7 +34,7 @@ function validateMailbox(mailbox) {
     updatedAt: Joi.date()
   });
 
-  return schema.validate(mailbox, schema);
+  return schema.validate(mailbox);
 }
 
 export { Mailbox, validateMailbox };

@@ -31,7 +31,7 @@ function validateRecipient(recipient) {
     recipient_type: Joi.string().valid("To", "Cc", "Bcc").required()
   })
 
-  return Joi.validate(recipient, schema);
+  return schema.validate(recipient);
 }
 
 export { Recipient, validateRecipient };

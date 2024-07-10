@@ -38,11 +38,15 @@ const createEmail = async (req, res) => {
     }
   });
 
-  await transporter.sendMail({
+  transporter.sendMail({
     from: sender,
     to: contact,
     subject,
-    text: body
+    text: body,
+    attachments: [{
+      path: newEmail.attachment.file_path,
+      filename: newEmail.attachment.file_name
+    }]
   });
 
   res.send(newEmail);

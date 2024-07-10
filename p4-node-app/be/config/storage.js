@@ -13,7 +13,7 @@ cloudinary.config({
 const attachmentStorage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: ["profile_pictures_mail_app", "attachments_mail_app"],
+    folder: "attachments_mail_app",
     allowedFormats: ["jpeg", "jpg", "png"],
   },
 });
