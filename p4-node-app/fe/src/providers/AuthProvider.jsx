@@ -6,7 +6,7 @@ const AuthProvider = ({ children }) => {
     localStorage.getItem("user") ? true : false
   )
   const [user, setUser] = useState(
-    localStorage.getItem("user") ? JSON.parse(localStorage.setItem("user")) : {}
+    localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
   )
 
   const state = {
