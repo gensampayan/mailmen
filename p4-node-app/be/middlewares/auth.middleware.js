@@ -8,18 +8,18 @@ const createToken = (user) => {
 
 const verifyToken = (req, res, next) => {
   try {
-    if (req.body.headers !== undefined) {
-      const token = req.body.headers.split(" ")[1];
-      return jwt.verify(token, process.env.JWT_SECRET);
-      next()
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+      const token = authHeader.split(" ")[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = decoded;
+      next();
     } else {
-      res.status(401).send({
-        message: "missing token"
-      })
+      res.status(401).json({ message: "Missing token" });
     }
-  } catch(error) {
+  } catch (error) {
     console.error(error);
-    res.status(403).send(error.message);
+    res.status(403).json({ message: "Token verification failed" });
   }
 }
 

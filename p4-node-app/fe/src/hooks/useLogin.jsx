@@ -12,13 +12,13 @@ const useLogin = () => {
     try {
       e.preventDefault();
 
-      const {
-        data: { data }
-      } = await axiosCall("post", "users/login", {
+      const { data } = await axiosCall("post", "users/login", 
+        {
         email_address: credentials.email,
         password: credentials.password
       });
 
+      localStorage.setItem("token", data.token);
       setIsLoggedIn(true)
       setUser(data)
       navigate("/mailbox")

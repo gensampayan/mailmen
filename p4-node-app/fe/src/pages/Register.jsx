@@ -5,13 +5,13 @@ import axiosCall from "../utils/axiosCall";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
+    first_name: "",
+    last_name: "",
+    email_address: "",
     password: "",
   });
   const [error, setError] = useState("");
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { setIsLoggedIn, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   function handleChange(e) {
@@ -25,22 +25,12 @@ const Register = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      const data = await axiosCall("post", "users/register", {
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email_address: formData.email,
-        password: formData.password
-      });
 
-      const userData = {
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email_address: formData.email
-      };
-
-      localStorage.setItem("user", JSON.stringify(userData));
+      const { data } = await axiosCall("post", "users/register", formData);
+      
+      localStorage.setItem("token", data.token);
       setIsLoggedIn(true);
-      setFormData(data);
+      setUser(data);
       navigate("/login")
     } catch(error) {
       console.error(error)
@@ -65,25 +55,25 @@ const Register = () => {
         >
           <input 
             type="text"
-            name="firstName"
+            name="first_name"
             placeholder="First name"
-            value={formData.firstname}
+            value={formData.first_name}
             onChange={handleChange}  
             className="w-96 p-3 rounded-md outline-none"
           />
           <input 
             type="text"
-            name="lastName"
+            name="last_name"
             placeholder="Last name"
-            value={formData.lastName}
+            value={formData.last_name}
             onChange={handleChange}  
             className="w-96 p-3 rounded-md outline-none"
           />
           <input 
             type="text"
-            name="email"
+            name="email_address"
             placeholder="Email"
-            value={formData.email}
+            value={formData.email_address}
             onChange={handleChange}  
             className="w-96 p-3 rounded-md outline-none"
           />

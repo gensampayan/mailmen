@@ -1,5 +1,14 @@
+import { useState, useEffect } from "react";
+import axiosCall from "../utils/axiosCall";
+import ComposeBtn from "../components/ComposeBtn";
 
-const Mailbox = ({}) => {
+const Mailbox = () => {
+  const [isWriting, setIsWriting] = useState(true);
+
+  const handleComposeBtn = () => {
+    setIsWriting(writing => !writing);
+    console.log(isWriting)
+  }
 
   return (
     <div className="mt-1">
@@ -15,6 +24,11 @@ const Mailbox = ({}) => {
         <div className="w-auto">
           <p>Profile</p>
         </div>
+      </div>
+      <div>
+        <ComposeBtn 
+          onWriting={handleComposeBtn}
+        />
       </div>
     </div>
   )
