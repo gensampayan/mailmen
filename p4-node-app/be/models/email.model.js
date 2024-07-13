@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, Types, model } from "mongoose";
 import Joi from "joi";
 import JoiObjectId from "joi-objectid";
 
@@ -6,7 +6,7 @@ Joi.objectId = JoiObjectId(Joi);
 
 const emailSchema = new Schema({
   sender: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: "User",
     required: true
   },

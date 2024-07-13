@@ -1,7 +1,7 @@
 import AuthContext from "../contexts/AuthContext";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosCall from "../../utils/axiosCall";
+import axiosCall from "../utils/axiosCall";
 
 const useLogin = () => {
   const {setIsLoggedIn, setUser} = useContext(AuthContext);
@@ -19,15 +19,9 @@ const useLogin = () => {
         password: credentials.password
       });
 
-      const userData = {
-        email: credentials.email
-      };
-
-      console.log("login")
-      localStorage.setItem("user", JSON.stringify(userData));
       setIsLoggedIn(true)
       setUser(data)
-      navigate("/")
+      navigate("/mailbox")
     } catch(error) {
       console.error(error)
       setError(error);

@@ -12,13 +12,8 @@ const createEmail = async (req, res) => {
     return res.status(400).send(error.details[0].message);
   }
 
-  const senderUser = await User.findOne({ email_address: sender });
-  if (!senderUser) {
-    return res.status(404).send("Can't find sender");
-  }
-
   const newEmail = new Email({
-    sender: senderUser.email_address, 
+    sender,
     contact,
     subject,
     body,

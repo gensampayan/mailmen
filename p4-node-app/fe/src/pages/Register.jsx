@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import AuthContext from "../contexts/AuthContext";
-import axiosCall from "../../utils/axiosCall";
+import axiosCall from "../utils/axiosCall";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -32,7 +32,13 @@ const Register = () => {
         password: formData.password
       });
 
-      console.log("click")
+      const userData = {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email_address: formData.email
+      };
+
+      localStorage.setItem("user", JSON.stringify(userData));
       setIsLoggedIn(true);
       setFormData(data);
       navigate("/login")
