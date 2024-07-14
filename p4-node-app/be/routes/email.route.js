@@ -16,7 +16,7 @@ const emailStorage = multer({ storage: attachmentStorage });
 
 emailRouter.post(
   "/compose", 
-  emailStorage.single("email-image"), 
+  emailStorage.single("attachment"), 
   verifyToken,
   asyncHandler(createEmail)
 );
@@ -30,7 +30,7 @@ emailRouter.get(
 );
 emailRouter.put(
   "/:emailId", 
-  emailStorage.single("email-image"), 
+  emailStorage.single("attachment"), 
   asyncHandler(updateEmail)
 );
 emailRouter.delete(

@@ -4,8 +4,17 @@ import nodemailer from "nodemailer";
 import moment from "moment"
 
 const createEmail = async (req, res) => {
-  const { sender, contact, subject, body } = req.body;
-  const { path, filename } = req.file;
+  const { contact, subject, body } = req.body;
+  const sender = req.user._id;
+  let attachment = {};
+
+  // Check if req.file exists before destructuring
+  if (req.file) {
+    attachment = {
+      path: req.file.path,
+      filename: req.file.filename
+    };
+  }
 
   const { error } = validateEmail(req.body);
   if (error) {
@@ -17,34 +26,40 @@ const createEmail = async (req, res) => {
     contact,
     subject,
     body,
-    attachment: { path, filename },
+    attachment,
     is_Read: false,
     is_Draft: false
   });
 
-  await newEmail.save();
+  try {
+    await newEmail.save();
 
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
-    }
-  });
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
+      }
+    });
 
-  transporter.sendMail({
-    from: sender,
-    to: contact,
-    subject,
-    text: body,
-    attachments: [{
-      path: newEmail.attachment.file_path,
-      filename: newEmail.attachment.file_name
-    }]
-  });
+    // Adjusted to use newEmail.attachment.path and newEmail.attachment.filename
+    transporter.sendMail({
+      from: sender,
+      to: contact,
+      subject,
+      text: body,
+      attachment: [{
+        path: newEmail.attachment.path,
+        filename: newEmail.attachment.filename
+      }]
+    });
 
-  res.send(newEmail);
+    res.status(200).send(newEmail);
+  } catch (error) {
+    console.error("Error creating email:", error);
+    res.status(500).send("Failed to create email.");
+  }
 };
 
 const getAllEmail = async (_, res) => {
