@@ -15,9 +15,15 @@ const baseUrl = "/api/v1";
 
 db();
 app.use(helmet());
-app.use(cors({
-  origin: "https://mailmen-zvco1rqi0-gens-projects-9f40b61e.vercel.app"
-}));
+app.use(cors());
+app.use((__, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET,PUT,POST,DELETE,PATCH,OPTIONS"
+  );
+  next();
+});
 app.use(express.json());
 app.use(`${baseUrl}/users`, userRouter);
 app.use(`${baseUrl}/emails`, emailRouter);
@@ -25,6 +31,8 @@ app.use(`${baseUrl}/mailbox`, mailboxRouter);
 app.use(pageNotFound);
 app.use(errorHandler);
 
-app.listen(process.env.PORT, () => console.log(`Server is listening on port ${process.env.PORT}`));
+app.listen(process.env.PORT, () =>
+  console.log(`Server is listening on port ${process.env.PORT}`)
+);
 
 export default app;
