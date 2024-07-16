@@ -14,11 +14,9 @@ const app = express();
 const baseUrl = "/api/v1";
 
 db();
-app.use(cors({
-  origin: "https://mailmen-2ufjnw4lc-gens-projects-9f40b61e.vercel.app"
-}));
-app.use(express.json());
 app.use(helmet());
+app.use(cors());
+app.use(express.json());
 app.use(`${baseUrl}/users`, userRouter);
 app.use(`${baseUrl}/emails`, emailRouter);
 app.use(`${baseUrl}/mailbox`, mailboxRouter);
