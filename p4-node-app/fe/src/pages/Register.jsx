@@ -78,7 +78,7 @@ const Register = () => {
             className="w-96 p-3 rounded-md outline-none"
           />
           <input 
-            type="text"
+            type="password"
             name="password"
             placeholder="Password"
             value={formData.password}
