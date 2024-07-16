@@ -15,7 +15,9 @@ const baseUrl = "/api/v1";
 
 db();
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: 'https://mailmen.vercel.app'
+}));
 app.use(express.json());
 app.use(`${baseUrl}/users`, userRouter);
 app.use(`${baseUrl}/emails`, emailRouter);
