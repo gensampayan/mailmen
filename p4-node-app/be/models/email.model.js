@@ -1,4 +1,4 @@
-import { Schema, Types, model } from "mongoose";
+import { Schema, model } from "mongoose";
 import Joi from "joi";
 import JoiObjectId from "joi-objectid";
 
@@ -23,39 +23,37 @@ const emailSchema = new Schema({
   body: {
     type: String,
     minlength: 1,
-    maxlength: 255,
     required: true
   },
   attachment: {
-    file_name: {
+    path: {
       type: String,
     },
-    file_path: {
+    filename: {
       type: String,
     }
   },
   is_Read: {
-    type: Boolean,  
+    type: Boolean,
   },
   is_Draft: {
     type: Boolean
   }
-},
-{ 
-  timestamps: true 
+}, {
+  timestamps: true
 });
 
 const Email = model("Email", emailSchema);
 
 function validateEmail(email) {
   const schema = Joi.object({
-    sender: Joi.string().required(),
+    sender: Joi.objectId().required(),
     contact: Joi.string().max(255).required(),
     subject: Joi.string().max(255).required(),
-    body: Joi.string().min(1).max(255).required(),
+    body: Joi.string().min(1).required(),
     attachment: Joi.object({
-      file_name: Joi.string(),
-      file_path: Joi.string()
+      path: Joi.string(),
+      filename: Joi.string()
     }),
     is_Read: Joi.boolean(),
     is_Draft: Joi.boolean(),
@@ -63,7 +61,7 @@ function validateEmail(email) {
     updatedAt: Joi.date()
   });
 
-  return schema.validate(email)
+  return schema.validate(email);
 }
 
 export { Email, validateEmail };

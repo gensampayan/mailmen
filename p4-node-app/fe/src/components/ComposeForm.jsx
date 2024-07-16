@@ -3,20 +3,20 @@ const ComposeForm = ({ inContactValue, inSubjectValue, inContentValue, inUploadV
 
   return (
 
-    <div className="border-2 border-gray-400 w-1/3">
+    <div className="border-2 border-gray-400 w-1/3 ml-5 mt-1 fixed absolute z-50">
       <p className="bg-gray-300">New Message</p>
       <form 
         onSubmit={inSubmit}
-        className="flex flex-col w-auto z-10"
+        className="flex flex-col"
       >
-      <div className="flex flex-row">
+      <div className="flex flex-row border-b-2 border-gray-400 w-full p-1">
         <label>To:</label>
         <input 
           type="text" 
           name="contact"
           value={inContactValue}
           onChange={inChange}  
-          className="border-b-2 border-gray-400 w-auto outline-none"
+          className="outline-none pl-1"
         />
       </div>
       <input 
@@ -25,13 +25,13 @@ const ComposeForm = ({ inContactValue, inSubjectValue, inContentValue, inUploadV
         placeholder="Subject" 
         value={inSubjectValue}  
         onChange={inChange}  
-        className="border-b-2 border-gray-400 w-auto outline-none"
+        className="border-b-2 border-gray-400 w-auto outline-none p-1"
       />
       <textarea
         name="body"
         value={inContentValue}
         onChange={inChange}  
-        className="resize-none h-96 border-b-2 border-gray-400 w-auto outline-none"
+        className="resize-none h-96 border-b-2 border-gray-400 w-auto outline-none p-1  "
       >
       </textarea>
       <input 

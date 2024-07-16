@@ -1,5 +1,5 @@
 const initialState = {
-  mails: localStorage.getItem("mails") ? JSON.parse(localStorage.getItem("mails")) : {}
+  mails: localStorage.getItem("mails") ? JSON.parse(localStorage.getItem("mails")) : []
 }
 
 const MailReducer = (state, action) => {
