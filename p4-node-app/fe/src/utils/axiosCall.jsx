@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const base = "https://mailmen-nz6kqcpk6-gens-projects-9f40b61e.vercel.app/api/v1";
+const base = "https://mailmen-api.vercel.app/api/v1";
 
 const axiosCall = async (method, endPoint, body) => {
   if (!endPoint) {
