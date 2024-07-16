@@ -16,7 +16,7 @@ const baseUrl = "/api/v1";
 db();
 app.use(helmet());
 app.use(cors({
-  origin: ['https://mailmen.vercel.app', 'https://mailmen-zvco1rqi0-gens-projects-9f40b61e.vercel.app']
+  origin: "https://mailmen-zvco1rqi0-gens-projects-9f40b61e.vercel.app"
 }));
 app.use(express.json());
 app.use(`${baseUrl}/users`, userRouter);
