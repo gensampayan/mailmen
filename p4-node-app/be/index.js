@@ -11,7 +11,7 @@ import { pageNotFound, errorHandler } from "./middlewares/error.middleware.js";
 dotenv.config();
 
 const app = express();
-const baseUrl = "/api/v1";
+const baseUrl = "https://mailmen-nz6kqcpk6-gens-projects-9f40b61e.vercel.app/api/v1";
 
 db();
 
